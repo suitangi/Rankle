@@ -107,7 +107,7 @@ $(document).ready(function() {
     }
   });
 
-  fetch('http://raw.githubusercontent.com/suitangi/Befuddle/main/cardList.json')
+  fetch('./cardList.json')
     .then(response => response.json())
     .then(data => {
       window.cardList = data;
