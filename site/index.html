@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Rankle is a Magic:The Gathering card ranking site.">
+  <title>Rankle</title>
+
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+
+  <!-- libray cdns -->
+  <script defer src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+  <!-- <script async src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script async type="application/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script> -->
+  <script defer type="application/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+  <!-- local -->
+  <link rel="stylesheet" type="text/css" href="styles/index.css">
+  <script defer type="text/javascript" src="scripts/index.js"></script>
+
+  <!-- fonts -->
+  <!-- <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link href="https://unpkg.com/@saeris/typeface-beleren-bold@latest/index.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&family=Roboto+Mono:wght@300&display=swap" rel="stylesheet"> -->
+
+</head>
+
+<body>
+  <!-- <div id="top-nav">
+    <span id="title">Rankle</span>
+    <span id="menu-button" class="nav-buttons material-symbols-outlined"> menu </span>
+    <span id="help-button" class="nav-buttons material-symbols-outlined"> help </span>
+  </div> -->
+  <div id="rankArea">
+    <div id="card1" class="cards">
+      <!-- <div id="imageLoading1" class="lds-dual-ring" style=""></div> -->
+      <img id="cardImage1" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+    </div>
+    <div id="card2" class="cards">
+      <!-- <div id="imageLoading2" class="lds-dual-ring" style=""></div> -->
+      <img id="cardImage2" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+    </div>
+  </div>
+
+  <form id="rankleForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScf1qFY73oGxSOUww4jDwXdwMhiGIQwtu4ChQQSz0ENXll0kA/formResponse" method="post" target="dummyframe">
+    <input type="hidden" name="entry.949117498" id="winnerInput" value="">
+    <input type="hidden" name="entry.367569774" id="loserInput" value="">
+  </form>
+  <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+
+</body>
+
+</html>

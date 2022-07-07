@@ -1,0 +1,105 @@
+body {
+  background: #333;
+}
+
+#rankArea {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.cards {
+  display: inline-block;
+  margin: 1px 20px;
+  cursor: pointer;
+}
+
+.cards:hover #cardImage1 {
+  transition: transform .5s;
+  transform: scale(1.2);
+}
+
+.cards:hover #cardImage2 {
+  transition: transform .5s;
+  transform: scale(1.2);
+}
+
+.opacity0 {
+  opacity: 0 !important;
+}
+
+.opacity1 {
+  opacity: 1 !important;
+}
+
+#cardImage1 {
+  /* width: min(400px, 90vw); */
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 20px;
+  object-fit: scale-down;
+  opacity: 1;
+  max-height: min(335px, -40px + 85vw);
+  user-select: none;
+  transition: transform .8s, opacity 2s;
+}
+
+#cardImage2 {
+  /* width: min(400px, 90vw); */
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  transition: opacity 2s;
+  object-fit: scale-down;
+  opacity: 1;
+  max-height: min(335px, -40px + 85vw);
+  user-select: none;
+  transition: transform .8s, opacity 2s;
+}
+
+#imageLoading1 {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+}
+
+#imageLoading2 {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border: 6px solid #eee;
+  border-color: #eee transparent #eee transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
