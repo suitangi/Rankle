@@ -27,7 +27,8 @@ function loadCard(index, data) {
   var newImg = new Image;
   newImg.onload = function() {
     img.src = this.src;
-    document.getElementById("cardImage" + index).style = "opacity:1;"
+    document.getElementById("cardImage" + index).style = "opacity:1;";
+    window.submitReady += 1;
   }
   newImg.src = data['image_uris']['normal'];
 }
@@ -49,13 +50,22 @@ function requestCard(index, id) {
         draggable: false,
         useBootstrap: false,
         typeAnimated: true,
-        backgroundDismiss: true
+        backgroundDismiss: true,
+        buttons: {
+          tryagain: {
+            text: 'Try again',
+            btnClass: 'btn-purple',
+            action: function() {
+              loadChoices();
+            }
+          }
+        }
       });
     });
 }
 
 function loadChoices() {
-  window.submitReady = false;
+  window.submitReady = 0;
   let r = Math.floor(Math.random() * window.cardList.length);
   window.cardIds[0] = window.cardList[r];
   r = Math.floor(Math.random() * window.cardList.length);
@@ -66,8 +76,6 @@ function loadChoices() {
 
   document.getElementById("cardImage2").style = "opacity:0; transition: opacity 0s;";
   requestCard(2, window.cardIds[1]);
-
-  window.submitReady = true;
 }
 
 function setInputs() {
@@ -75,45 +83,60 @@ function setInputs() {
   document.getElementById('loserInput').value = window.submitQueue.losers.toString();
 }
 
+function submitRankleForm() {
+  if (window.submitQueue.length == 0)
+    return;
+  document.getElementById('rankleForm').submit();
+  window.submitQueue.winners = [];
+  window.submitQueue.losers = [];
+  window.submitQueue.length = 0;
+}
+
+
 //start script
 $(document).ready(function() {
   window.submitQueue = {};
   window.submitQueue.winners = [];
   window.submitQueue.losers = [];
   window.submitQueue.length = 0;
+  window.submitTimer;
   window.cardIds = [0, 0];
-  window.submitReady = false;
+  window.submitReady = 0;
 
   document.getElementById('card1').addEventListener('click', function() {
-    if (!window.submitReady)
+    if (window.submitReady != 2)
       return;
-    else {
-      window.submitQueue.length += 1;
-      window.submitQueue.winners.push(window.cardIds[0]);
-      window.submitQueue.losers.push(window.cardIds[1]);
-      setInputs();
-      loadChoices();
-    }
+    window.submitQueue.length += 1;
+    window.submitQueue.winners.push(window.cardIds[0]);
+    window.submitQueue.losers.push(window.cardIds[1]);
+    setInputs();
+    loadChoices();
+    clearTimeout(window.submitTimer);
+    window.submitTimer = setTimeout(function() {
+      submitRankleForm();
+    }, 10000);
   });
   document.getElementById('card2').addEventListener('click', function() {
-    if (!window.submitReady)
+    if (window.submitReady != 2)
       return;
-    else {
-      window.submitQueue.length += 1;
-      window.submitQueue.winners.push(window.cardIds[1]);
-      window.submitQueue.losers.push(window.cardIds[0]);
-      setInputs();
-      loadChoices();
-    }
+    window.submitQueue.length += 1;
+    window.submitQueue.winners.push(window.cardIds[1]);
+    window.submitQueue.losers.push(window.cardIds[0]);
+    setInputs();
+    loadChoices();
+    clearTimeout(window.submitTimer);
+    window.submitTimer = setTimeout(function() {
+      submitRankleForm();
+    }, 10000);
   });
 
-  fetch('./cardList.json')
+  fetch('https://raw.githubusercontent.com/suitangi/Rankle/main/rank/cardList.json')
     .then(response => response.json())
     .then(data => {
       window.cardList = data;
       loadChoices();
     })
     .catch(error => {
-        console.error('There was an error!', error);
+      console.error('There was an error!', error);
     });
 });
