@@ -40,13 +40,38 @@
   </div> -->
   <div id="rankArea">
     <div id="card1" class="cards">
-      <!-- <div id="imageLoading1" class="lds-dual-ring" style=""></div> -->
-      <img id="cardImage1" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+      <div class="loaderContainer"><span class="loader" id="loader1" style="display:none;"></span></div>
+      <div class="flip-card" id="flip-card1">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <img id="cardImage1-1" class="cardImage" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+          </div>
+          <div class="flip-card-back">
+            <img id="cardImage1-2" class="cardImage" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="">
+          </div>
+        </div>
+      </div>
+      <div class="flipButton-container">
+        <button id="flipButt1" class="flip-button" style="opacity:0; transition: opacity 0s;" disabled>Flip</button>
+      </div>
     </div>
     <div id="card2" class="cards">
-      <!-- <div id="imageLoading2" class="lds-dual-ring" style=""></div> -->
-      <img id="cardImage2" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+      <div class="loaderContainer"><span class="loader" id="loader2" style="display:none;"></span></div>
+      <div class="flip-card" id="flip-card2">
+        <div class="flip-card-inner">
+          <div class="flip-card-front">
+            <img id="cardImage2-1" class="cardImage" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="opacity:0; transition: opacity 0s;">
+          </div>
+          <div class="flip-card-back">
+            <img id="cardImage2-2" class="cardImage" alt="Magic: The Gathering card" src="./imgs/rankle.webp" style="">
+          </div>
+        </div>
+      </div>
+      <div class="flipButton-container">
+        <button id="flipButt2" class="flip-button" style="opacity:0; transition: opacity 0s;" disabled>Flip</button>
+      </div>
     </div>
+    <button id="submitButton" disabled style="display:none;">Submit</button>
   </div>
 
   <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
