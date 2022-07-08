@@ -229,8 +229,8 @@ function menuModal() {
       '<br><button id="rankingsButton" class="menuButton">See Rankings</button>' +
       '<br><br><div class="hr"></div>' +
       '<div class="modalText" id="credits">Credits <span id="creditExpand" class="material-symbols-outlined"> expand_more </span></div>' +
-      '<div id="creditText"class="expandiv collapsediv">• Card Data: <a href="https://scryfall.com/" target="_blank">Scryfall</a>' +
-      '<br>• Card Images: <a href="https://scryfall.com/" target="_blank">Scryfall</a>' +
+      '<div id="creditText"class="expandiv collapsediv">' +
+      '• Card Images: <a href="https://scryfall.com/" target="_blank">Scryfall</a>' +
       '<br>• Font: <a href="https://company.wizards.com/en" target="_blank">Wizards of the Coast</a><br><br></div>' +
       '<div class="hr"></div><div class=\"modalText\" id="disclaimer">Disclaimer  <span id="disclaimerExpand" class="material-symbols-outlined"> expand_more </span></div>' +
       '<div id="disclaimerText" class="expandiv collapsediv">Portions of Befuddle are unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank">Wizards of the Coast Fan Content Policy</a>. ' +
