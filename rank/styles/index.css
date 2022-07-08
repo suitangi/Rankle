@@ -31,11 +31,100 @@
   font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 100 700;
-  src: url(https://fonts.gstatic.com/s/sandbox/materialsymbolsoutlined/v7/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+  src: url("https://fonts.gstatic.com/s/sandbox/materialsymbolsoutlined/v7/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2") format('woff2');
 }
 
 body {
   background: #333;
+}
+
+a {
+  color: #5ec4eb;
+  text-decoration: none;
+  transition: color .5s;
+}
+
+a:hover {
+  color: #b6ebff;
+}
+
+.hr {
+  width: 100%;
+  border-bottom: solid 2px;
+  border-color: #555;
+  margin-top: 3px;
+  margin-bottom: 6px;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+#title {
+  font-family: 'Beleren Bold';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #eee;
+  font-size: min(30px, 10vw);
+  user-select: none;
+}
+
+#menu-button {
+  font-size: min(30px, 8vw);
+  top: 50%;
+  transform: translate(0, -50%);
+  left: 1%;
+  font-variation-settings: 'FILL'0, 'wght'300;
+}
+
+#help-button {
+  font-size: min(30px, 8vw);
+  top: 50%;
+  transform: translate(125%, -50%);
+  left: 1%;
+  font-variation-settings: 'FILL'0, 'wght'250;
+}
+
+#top-nav .nav-buttons {
+  cursor: pointer;
+  color: #ddd;
+  position: absolute;
+  user-select: none;
+  transition: color .5s;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#top-nav .nav-buttons:hover {
+  cursor: pointer;
+  color: #fff;
+  position: absolute;
+  user-select: none;
+}
+
+#top-nav {
+  position: fixed;
+  width: 100%;
+  top: 0%;
+  left: 0%;
+  background-color: rgba(20, 20, 20, 0.7);
+  height: 50px;
+  height: min(50px, 15vw);
+  z-index: 10;
 }
 
 .modalTitle {
@@ -53,7 +142,7 @@ body {
   width: 250px;
   left: 50%;
   bottom: 0%;
-  transform: translate(-50%, max(100%, 8vw));
+  transform: translate(-50%, max(120%, 9vw));
   background: #555;
   border: none;
   padding: 10px 30px;
@@ -63,7 +152,7 @@ body {
   font-size: 20px;
   cursor: pointer;
   opacity: 1;
-  transition: color .5s, background .5s, opacity 2s;
+  / color .5s, background .5s, opacity 1.5s;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
 }
@@ -80,9 +169,9 @@ body {
 
 #rankArea {
   position: absolute;
-  top: max(45%, 50vh);
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, calc(-50% + max(calc(50px - (50vh - 50%)), 0px)));
   display: block;
   text-align: center;
   width: 100%;
@@ -92,6 +181,7 @@ body {
 .cards {
   display: inline-block;
   margin: 1px 20px;
+  vertical-align: top;
   background-color: transparent;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
@@ -117,11 +207,6 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
-}
-
-.flip-button:disabled {
-  opacity: 0 !important;
-  cursor:default;
 }
 
 .flip-button:hover {
@@ -177,19 +262,158 @@ body {
 }
 
 .cardImage {
-  -moz-border-radius: 5%;
-  -webkit-border-radius: 5%;
+  -moz-border-radius: 8% / 6%;
+  -webkit-border-radius: 8% / 6%;
   transition: opacity 2s;
   object-fit: scale-down;
   opacity: 1;
   max-height: min(335px, -40px + 85vw);
   user-select: none;
-  cursor:pointer;
+  cursor: pointer;
   transition: transform .8s, opacity 2s;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.helpText {
+  font-family: 'Roboto Mono';
+  font-size: 13px;
+}
+
+#prankleImage {
+  width: 50%;
+  border-radius: 5%;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0px);
+}
+
+/* main menu */
+.menuButton {
+  background: #333;
+  border: none;
+  color: #eee;
+  padding: 12px 31px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Beleren Bold';
+  font-size: 16px;
+  margin: 10px 0px;
+  cursor: pointer;
+  border-radius: 9px;
+  position: relative;
+  left: 50%;
+  width: 90%;
+  transition: background .7s;
+  transform: translate(-50%, 0);
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-tap-highlight-color: transparent;
 }
 
+.menuButton:hover {
+  background: #222;
+}
+
+.mainMenuText {
+  font-family: 'Beleren Bold';
+  user-select: none;
+}
+
+#mainMenuTitle {
+  font-family: 'Beleren Bold';
+  font-size: 30px;
+  user-select: none;
+}
+
+.expandiv {
+  overflow-y: hidden;
+}
+
+.collapsediv {
+  height: 0px;
+}
+
+#credits {
+  font-family: 'Beleren Bold';
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 40px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rotato {
+  transform: rotate(-180deg);
+}
+
+#creditText {
+  font-family: 'Roboto Mono';
+  font-size: 13px;
+}
+
+#creditExpand {
+  font-size: 18px;
+  position: relative;
+  transition: transform 0.5s;
+  transition-timing-function: ease-out;
+  top: 3px;
+}
+
+#disclaimer {
+  font-family: 'Beleren Bold';
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 40px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#disclaimerText {
+  font-family: 'Roboto Mono';
+  font-size: 11px;
+  text-align: justify;
+}
+
+#disclaimerExpand {
+  font-size: 18px;
+  position: relative;
+  transition: transform 0.5s;
+  transition-timing-function: ease-out;
+  top: 3px;
+}
+
+#easterEggHeart {
+  cursor: pointer;
+  font-size: 11px;
+  color: #64baf7;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#rab {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#bmad {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jconfirm.jconfirm-dark .jconfirm-bg {
+  background-color: black !important;
+}
+
+/* loader */
 .loaderContainer {
   height: 10px;
 }

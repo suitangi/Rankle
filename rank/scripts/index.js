@@ -45,7 +45,7 @@ function loadCard(index, data) {
       window.submitReady[index] += 0.5;
       if (window.submitReady[index] == 1) {
         document.getElementById('card' + index).classList.remove('cardHover');
-        document.getElementById("flipButt" + index).disabled = false;
+        document.getElementById("flipButt" + index).style="";
       }
     }
     newImg.src = data['card_faces'][0]['image_uris']['normal'];
@@ -55,7 +55,7 @@ function loadCard(index, data) {
       window.submitReady[index] += 0.5;
       if (window.submitReady[index] == 1) {
         document.getElementById('card' + index).classList.remove('cardHover');
-        document.getElementById("flipButt" + index).disabled = false;
+        document.getElementById("flipButt" + index).style="";
       }
     }
     newImg2.src = data['card_faces'][1]['image_uris']['normal'];
@@ -79,6 +79,7 @@ function requestCard(index, id) {
     .then(response => response.json())
     .then(data => loadCard(index, data))
     .catch(error => {
+      console.error('Card id:' + id);
       console.error(error);
       $.alert({
         title: '<span class=\"modalTitle\">Error</span>',
@@ -139,17 +140,20 @@ function loadChoices(id1, id2) {
 
   document.getElementById("cardImage1-1").style = "opacity:0; transition: opacity 0s;";
   document.getElementById("loader1").style = "";
-  document.getElementById("flipButt1").disabled = true;
+  document.getElementById("flipButt1").style= "display:none;";
   document.getElementById('card1').classList.remove('cardHover');
   document.getElementById('flip-card1').classList.remove('flipped');
   requestCard(1, window.cardIds[0]);
 
   document.getElementById("cardImage2-1").style = "opacity:0; transition: opacity 0s;";
   document.getElementById("loader2").style = "";
-  document.getElementById("flipButt2").disabled = true;
+  document.getElementById("flipButt2").style= "display:none;";
   document.getElementById('card2').classList.remove('cardHover');
   document.getElementById('flip-card2').classList.remove('flipped');
-  requestCard(2, window.cardIds[1]);
+
+  setTimeout(function() {
+    requestCard(2, window.cardIds[1]);
+  }, 50); //delay for scryfall api rates
 }
 
 function setInputs() {
@@ -162,16 +166,16 @@ function submitRankleForm() {
     return;
   document.getElementById('submitButton').disabled = true;
 
-  // console.log('form submitted!');
+  console.log('form submitted!');
 
-  document.getElementById('rankleForm').submit();
+  // document.getElementById('rankleForm').submit();
   window.submitQueue.winners = [];
   window.submitQueue.losers = [];
   window.submitQueue.length = 0;
 }
 
 function chooseCard(choice) {
-  if (window.submitReady[1] + window.submitReady[2] != 2)
+  if (window.submitReady[1] + window.submitReady[2] != 2) //a hacky semaphore
     return;
   window.submitQueue.length += 1;
   window.submitQueue.winners.push(window.cardIds[choice]);
@@ -181,15 +185,128 @@ function chooseCard(choice) {
   clearTimeout(window.submitTimer);
   document.getElementById('submitButton').disabled = false;
   document.getElementById('submitButton').innerText = "Submit (" + window.submitQueue.length + ")";
-  window.submitTimer = setTimeout(function() {
-    document.getElementById('submitButton').innerText = "Auto-submitting...";
-    setTimeout(function() {
-      document.getElementById('submitButton').innerText = "Submit (" + window.submitQueue.length + ")";
-    }, 3000);
-    submitRankleForm();
-  }, 60000);
+
+  if (window.submitQueue.length >= 60) {
+    autoSubmit();
+  } else {
+    window.submitTimer = setTimeout(function() {
+      autoSubmit();
+    }, 60000);
+  }
 }
 
+function autoSubmit() {
+  document.getElementById('submitButton').innerText = "Auto-submitting...";
+  setTimeout(function() {
+    document.getElementById('submitButton').innerText = "Submit (" + window.submitQueue.length + ")";
+  }, 3100);
+  submitRankleForm();
+}
+
+function helpModal() {
+  $.dialog({
+    title: '<span class=\"modalTitle\">What is Rankle?</span>',
+    content: '<span class=\"helpText\">Pick the <a href="https://magic.wizards.com/en" target="_blank">Magic: The Gathering</a> Card between the two that you like more.<br><br>' +
+      'There is no criteria, you can decide holistically which card deserves your pick more. It could be art, lore, card mechanic, or even nostalgia!<br><br></span><div class="hr"></div>' +
+      '<span class=\"helpText\">Your picks help us rank cards based on an elo system to see what the community likes!',
+    theme: 'dark',
+    animation: 'top',
+    closeAnimation: 'top',
+    animateFromElement: false,
+    boxWidth: 'min(400px, 80%)',
+    draggable: false,
+    backgroundDismiss: true,
+    useBootstrap: false
+  });
+}
+
+//function to handle menu button
+function menuModal() {
+
+  let menuD = $.dialog({
+    title: '',
+    content: '<div class="modalTitle" style="text-align: center;font-size: 30px;">Rankle</div>' +
+      '<br><button id="rankingsButton" class="menuButton">See Rankings</button>' +
+      '<br><br><div class="hr"></div>' +
+      '<div class="modalText" id="credits">Credits <span id="creditExpand" class="material-symbols-outlined"> expand_more </span></div>' +
+      '<div id="creditText"class="expandiv collapsediv">• Card Data: <a href="https://scryfall.com/" target="_blank">Scryfall</a>' +
+      '<br>• Card Images: <a href="https://scryfall.com/" target="_blank">Scryfall</a>' +
+      '<br>• Font: <a href="https://company.wizards.com/en" target="_blank">Wizards of the Coast</a><br><br></div>' +
+      '<div class="hr"></div><div class=\"modalText\" id="disclaimer">Disclaimer  <span id="disclaimerExpand" class="material-symbols-outlined"> expand_more </span></div>' +
+      '<div id="disclaimerText" class="expandiv collapsediv">Portions of Befuddle are unofficial Fan Content permitted under the <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank">Wizards of the Coast Fan Content Policy</a>. ' +
+      'The literal and graphical information presented on this site about Magic: The Gathering, including card images, the mana symbols, is copyright Wizards of the Coast, LLC, a subsidiary of Hasbro, Inc. Befuddle is not produced by, endorsed by, supported by, or affiliated with Wizards of the Coast.<br><br></div>' +
+      '<div class="hr"></div>' +
+      '<div class="helpText" style="text-align: center;line-height:1.8;">Developed with <span id="easterEggHeart" class="material-symbols-outlined" style="font-variation-settings: \'FILL\' 1;"> favorite </span> by Suitangi' +
+      '<br><a><span id="rab">Report a Bug</span></a>' +
+      '<br><a><span id="bmad">Buy me a Drink</span></a></div>',
+    theme: 'dark',
+    animation: 'left',
+    closeAnimation: 'left',
+    animateFromElement: false,
+    boxWidth: 'min(400px, 80%)',
+    draggable: false,
+    backgroundDismiss: true,
+    useBootstrap: false,
+    onContentReady: function() {
+      document.getElementById('credits').addEventListener('click', function() {
+        let s = document.getElementById('creditText');
+        if (!s.classList.contains('collapsediv')) {
+          s.classList.add('collapsediv');
+          document.getElementById('creditExpand').classList.remove('rotato');
+        } else {
+          s.classList.remove('collapsediv');
+          document.getElementById('creditExpand').classList.add('rotato');
+        }
+      });
+      document.getElementById('disclaimer').addEventListener('click', function() {
+        let s = document.getElementById('disclaimerText');
+        if (!s.classList.contains('collapsediv')) {
+          s.classList.add('collapsediv');
+          document.getElementById('disclaimerExpand').classList.remove('rotato');
+        } else {
+          s.classList.remove('collapsediv');
+          document.getElementById('disclaimerExpand').classList.add('rotato');
+        }
+      });
+      document.getElementById('rankingsButton').addEventListener('click', function() {
+        prankle('Get Prankled', 'Just kidding. This feature is still under development');
+        console.log('Go to rankings page');
+      });
+
+      document.getElementById('rab').addEventListener('click', function() {
+        menuD.close();
+        prankle('Get Prankled', 'Just kidding. This feature is still under development');
+        // reportBug();
+      });
+      document.getElementById('bmad').addEventListener('click', function() {
+        prankle('Get Prankled', 'Just kidding. This feature is still under development');
+        // buyDrink();
+      });
+      document.getElementById('easterEggHeart').addEventListener('click', function() {
+        prankle('Get Prankled', 'Love to my beta testers: Pkmnfn and Ksax');
+        // easterEgg();
+      });
+    }
+  });
+}
+
+function prankle(title, text) {
+  $.dialog({
+    title: '<span class=\"modalTitle\">' + title + '</span>',
+    content:
+      '<img id="prankleImage" src="./imgs/rankle.webp"><br><div class="hr"></div>' +
+      '<span class=\"helpText\">' + text + '</span>',
+    theme: 'dark',
+    type: 'red',
+    animation: 'top',
+    closeAnimation: 'top',
+    animateFromElement: false,
+    boxWidth: 'min(400px, 80%)',
+    draggable: false,
+    backgroundDismiss: true,
+    useBootstrap: false
+  });
+}
 
 //start script
 $(document).ready(function() {
@@ -211,7 +328,13 @@ $(document).ready(function() {
   document.getElementById('cardImage1-1').addEventListener('click', function() {
     chooseCard(0);
   });
+  document.getElementById('cardImage1-2').addEventListener('click', function() {
+    chooseCard(0);
+  });
   document.getElementById('cardImage2-1').addEventListener('click', function() {
+    chooseCard(1);
+  });
+  document.getElementById('cardImage2-2').addEventListener('click', function() {
     chooseCard(1);
   });
   document.getElementById('card1').addEventListener('mouseenter', function() {
@@ -228,14 +351,19 @@ $(document).ready(function() {
   });
 
   document.getElementById('flipButt1').addEventListener('click', function() {
-    if (this.disabled)
-      return;
+    console.log('test1');
     document.getElementById('flip-card1').classList.toggle('flipped');
   });
   document.getElementById('flipButt2').addEventListener('click', function() {
-    if (this.disabled)
-      return;
+    console.log('test2');
     document.getElementById('flip-card2').classList.toggle('flipped');
+  });
+
+  document.getElementById('menu-button').addEventListener('click', function() {
+    menuModal();
+  });
+  document.getElementById('help-button').addEventListener('click', function() {
+    helpModal();
   });
 
 
