@@ -86,6 +86,7 @@ body {
   display: block;
   text-align: center;
   width: 100%;
+  user-select: none;
 }
 
 .cards {

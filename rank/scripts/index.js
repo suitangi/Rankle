@@ -22,6 +22,15 @@ function recreateNode(el, withChildren) {
   }
 }
 
+const beforeUnloadListener = (event) => {
+  if (window.submitQueue.length != 0) {
+    let str = "You have unsaved changes!";
+    event.preventDefault();
+
+    return event.returnValue = str;
+  }
+};
+
 function loadCard(index, data) {
   if (data['layout'] == 'transform' || data['layout'] == 'modal_dfc') { //dfc's
     var img = document.getElementById("cardImage" + index + '-1');
@@ -99,6 +108,17 @@ function requestCard(index, id) {
 
 function loadChoices(id1, id2) {
 
+  let d = new Date();
+  if (d - window.limiter.d < window.limiter.limit) {
+    console.log("Rate Limited: " + (window.limiter.limit - (d - window.limiter.d)));
+    clearTimeout(window.limiter.timeout);
+    window.limiter.timeout = setTimeout(function() {
+      loadChoices();
+    }, window.limiter.limit - (d - window.limiter.d));
+    return;
+  }
+
+  window.limiter.d = d;
   window.submitReady = {
     1: 0,
     2: 0
@@ -179,6 +199,10 @@ $(document).ready(function() {
   window.submitQueue.length = 0;
   window.submitTimer;
   window.cardIds = [0, 0];
+  window.limiter = {};
+  window.limiter.limit = 1500;
+  window.limiter.timeout;
+  window.limiter.d = 0;
   window.submitReady = {
     1: 0,
     2: 0
@@ -219,6 +243,10 @@ $(document).ready(function() {
     if (this.disabled)
       return;
     submitRankleForm();
+  });
+
+  addEventListener("beforeunload", beforeUnloadListener, {
+    capture: true
   });
 
   fetch('https://raw.githubusercontent.com/suitangi/Rankle/main/rank/cardList.json')
