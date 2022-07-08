@@ -1,12 +1,12 @@
 # Rankle
 Magic: The Gathering card ranker.
 
-##To do:
+## To do:
 
-###Client
+### Client
 - More UI
 
-###Misc
+### Misc
 - Refine/Update Card list
 - Remove non-english cards
 - Remove Un-set cards
