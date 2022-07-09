@@ -45,7 +45,7 @@ function loadCard(index, data) {
       window.submitReady[index] += 0.5;
       if (window.submitReady[index] == 1) {
         document.getElementById('card' + index).classList.remove('cardHover');
-        document.getElementById("flipButt" + index).style="";
+        document.getElementById("flipButt" + index).style = "";
       }
     }
     newImg.src = data['card_faces'][0]['image_uris']['normal'];
@@ -55,7 +55,7 @@ function loadCard(index, data) {
       window.submitReady[index] += 0.5;
       if (window.submitReady[index] == 1) {
         document.getElementById('card' + index).classList.remove('cardHover');
-        document.getElementById("flipButt" + index).style="";
+        document.getElementById("flipButt" + index).style = "";
       }
     }
     newImg2.src = data['card_faces'][1]['image_uris']['normal'];
@@ -74,6 +74,7 @@ function loadCard(index, data) {
   }
 }
 
+//deprecated
 function requestCard(index, id) {
   fetch('https://api.scryfall.com/cards/' + id)
     .then(response => response.json())
@@ -81,34 +82,15 @@ function requestCard(index, id) {
     .catch(error => {
       console.error('Card id:' + id);
       console.error(error);
-      $.alert({
-        title: '<span class=\"modalTitle\">Error</span>',
-        content: '<span class=\"modalText\">Couldn\'t load card image and information. Check your connection and/or Scryfall API status.</span>',
-        type: 'red',
-        theme: 'dark',
-        animation: 'top',
-        closeAnimation: 'top',
-        animateFromElement: false,
-        boxWidth: 'min(400px, 80%)',
-        draggable: false,
-        useBootstrap: false,
-        typeAnimated: true,
-        backgroundDismiss: false,
-        buttons: {
-          tryagain: {
-            text: 'Try again',
-            btnClass: 'btn-red',
-            action: function() {
-              loadChoices();
-            }
-          }
-        }
+      errorMessage('Error', 'Couldn\'t load card image and information. Check your connection and/or Scryfall API status.', function() {
+        loadChoices();
       });
     });
 }
 
-function loadChoices(id1, id2) {
 
+//function to ready and load card choices
+function loadChoices() {
   let d = new Date();
   if (d - window.limiter.d < window.limiter.limit) {
     console.log("Rate Limited: " + (window.limiter.limit - (d - window.limiter.d)));
@@ -124,43 +106,39 @@ function loadChoices(id1, id2) {
     1: 0,
     2: 0
   };
-  if (id1 == null) {
-    let r = Math.floor(Math.random() * window.cardList.length);
-    window.cardIds[0] = window.cardList[r];
-  } else {
-    window.cardIds[0] = id1;
-  }
 
-  if (id2 == null) {
-    r = Math.floor(Math.random() * window.cardList.length);
-    window.cardIds[1] = window.cardList[r];
+  if (window.cardQueue.length < 2) {
+    requestCards(50);
+    return;
   } else {
-    window.cardIds[1] = id2
+    window.cardIds[0] = window.cardQueue[0]['id'];
+    window.cardIds[1] = window.cardQueue[1]['id'];
   }
 
   document.getElementById("cardImage1-1").style = "opacity:0; transition: opacity 0s;";
   document.getElementById("loader1").style = "";
-  document.getElementById("flipButt1").style= "display:none;";
+  document.getElementById("flipButt1").style = "display:none;";
   document.getElementById('card1').classList.remove('cardHover');
   document.getElementById('flip-card1').classList.remove('flipped');
-  requestCard(1, window.cardIds[0]);
+  loadCard(1, window.cardQueue.shift());
 
   document.getElementById("cardImage2-1").style = "opacity:0; transition: opacity 0s;";
   document.getElementById("loader2").style = "";
-  document.getElementById("flipButt2").style= "display:none;";
+  document.getElementById("flipButt2").style = "display:none;";
   document.getElementById('card2').classList.remove('cardHover');
   document.getElementById('flip-card2').classList.remove('flipped');
 
-  setTimeout(function() {
-    requestCard(2, window.cardIds[1]);
-  }, 50); //delay for scryfall api rates
+  loadCard(2, window.cardQueue.shift());
 }
 
+
+//sets the inputs for the form submissions
 function setInputs() {
   document.getElementById('winnerInput').value = window.submitQueue.winners.toString();
   document.getElementById('loserInput').value = window.submitQueue.losers.toString();
 }
 
+//function to submit form
 function submitRankleForm() {
   if (window.submitQueue.length == 0)
     return;
@@ -174,6 +152,7 @@ function submitRankleForm() {
   window.submitQueue.length = 0;
 }
 
+//handler for user choosing a card
 function chooseCard(choice) {
   if (window.submitReady[1] + window.submitReady[2] != 2) //a hacky semaphore
     return;
@@ -195,6 +174,48 @@ function chooseCard(choice) {
   }
 }
 
+//helper to get random card from list
+function getRandomCardId() {
+  return window.cardList[Math.floor(Math.random() * window.cardList.length)];
+}
+
+//api call to request the num amount of cards (default 50)
+function requestCards(num) {
+  if (num == null)
+    num = 50;
+
+  let bodydata = {
+    'identifiers': []
+  };
+
+  for (var i = 0; i < num; i++) {
+    bodydata['identifiers'].push({
+      'id': getRandomCardId()
+    });
+  }
+  fetch("https://api.scryfall.com/cards/collection", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bodydata),
+    }).then(response => response.json())
+    .then(data => {
+      window.cardQueue.push(...data['data']);
+      clearTimeout(window.limiter.timeout);
+      window.limiter.d = 0;
+      loadChoices();
+    }).catch(error => {
+      console.error(error);
+      errorMessage('Error', 'Couldn\'t connect to Scryfall. Please check your internet connection or server status.', function() {
+        requestCards(num);
+      });
+    });
+
+}
+
+//function to autoSubmit the form and show correct UI for doing so
 function autoSubmit() {
   document.getElementById('submitButton').innerText = "Auto-submitting...";
   setTimeout(function() {
@@ -203,6 +224,7 @@ function autoSubmit() {
   submitRankleForm();
 }
 
+//help button modal
 function helpModal() {
   $.dialog({
     title: '<span class=\"modalTitle\">What is Rankle?</span>',
@@ -220,7 +242,7 @@ function helpModal() {
   });
 }
 
-//function to handle menu button
+//function to handle menu button and show the modal
 function menuModal() {
 
   let menuD = $.dialog({
@@ -290,14 +312,41 @@ function menuModal() {
   });
 }
 
+//function to show error message
+function errorMessage(title, message, buttonAction) {
+  $.alert({
+    title: '<span class=\"modalTitle\">' + title + '</span>',
+    content: '<span class=\"modalText\">' + message + '</span>',
+    type: 'red',
+    theme: 'dark',
+    animation: 'top',
+    closeAnimation: 'top',
+    animateFromElement: false,
+    boxWidth: 'min(400px, 80%)',
+    draggable: false,
+    useBootstrap: false,
+    typeAnimated: true,
+    backgroundDismiss: false,
+    buttons: {
+      tryagain: {
+        text: 'Try again',
+        btnClass: 'btn-red',
+        action: function() {
+          buttonAction();
+        }
+      }
+    }
+  });
+}
+
+//function to show prankle message
 function prankle(title, text) {
   $.dialog({
     title: '<span class=\"modalTitle\">' + title + '</span>',
-    content:
-      '<img id="prankleImage" src="./imgs/rankle.webp"><br><div class="hr"></div>' +
+    content: '<img id="prankleImage" src="./imgs/rankle.webp"><br><div class="hr"></div>' +
       '<span class=\"helpText\">' + text + '</span>',
     theme: 'dark',
-    type: 'red',
+    type: 'purple',
     animation: 'top',
     closeAnimation: 'top',
     animateFromElement: false,
@@ -315,9 +364,11 @@ $(document).ready(function() {
   window.submitQueue.losers = [];
   window.submitQueue.length = 0;
   window.submitTimer;
+  window.cardList = [];
   window.cardIds = [0, 0];
+  window.cardQueue = [];
   window.limiter = {};
-  window.limiter.limit = 1500;
+  window.limiter.limit = 500;
   window.limiter.timeout;
   window.limiter.d = 0;
   window.submitReady = {
@@ -381,10 +432,10 @@ $(document).ready(function() {
     .then(response => response.json())
     .then(data => {
       document.getElementById('submitButton').style = '';
-      document.getElementById('flipButt1').style = '';
-      document.getElementById('flipButt2').style = '';
+      document.getElementById('flipButt1').style = "display:none;";
+      document.getElementById('flipButt2').style = "display:none;";
       window.cardList = data;
-      loadChoices();
+      requestCards(20);
     })
     .catch(error => {
       console.error('There was an error!', error);
