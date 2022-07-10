@@ -144,9 +144,9 @@ function submitRankleForm() {
     return;
   document.getElementById('submitButton').disabled = true;
 
-  console.log('form submitted!');
+  // console.log('form submitted!');
 
-  // document.getElementById('rankleForm').submit();
+  document.getElementById('rankleForm').submit();
   window.submitQueue.winners = [];
   window.submitQueue.losers = [];
   window.submitQueue.length = 0;
@@ -402,11 +402,9 @@ $(document).ready(function() {
   });
 
   document.getElementById('flipButt1').addEventListener('click', function() {
-    console.log('test1');
     document.getElementById('flip-card1').classList.toggle('flipped');
   });
   document.getElementById('flipButt2').addEventListener('click', function() {
-    console.log('test2');
     document.getElementById('flip-card2').classList.toggle('flipped');
   });
 

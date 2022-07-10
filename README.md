@@ -12,6 +12,7 @@ Magic: The Gathering card ranker.
 - Remove Un-set cards
 
 ### Server
+- Figure out Google Forms API
 - Schedule elo calculations
 - JSON Server (?) integration for rankings
 - Per card searches
