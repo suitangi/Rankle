@@ -1,0 +1,15 @@
+{
+  "name": "rankle-elo-calc",
+  "version": "1.0.0",
+  "description": "Elo calculator for Rankle project. Automatically gets data and schedules updates to ranks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "suitangi",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "googleapis": "^105.0.0"
+  }
+}

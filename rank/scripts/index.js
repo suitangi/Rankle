@@ -142,9 +142,9 @@ function setInputs() {
 function submitRankleForm() {
   if (window.submitQueue.length == 0)
     return;
-  document.getElementById('submitButton').disabled = true;
+  // document.getElementById('submitButton').disabled = true;
 
-  // console.log('form submitted!');
+  console.log('form submitted!');
 
   document.getElementById('rankleForm').submit();
   window.submitQueue.winners = [];
